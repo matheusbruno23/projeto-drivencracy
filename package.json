@@ -1,0 +1,35 @@
+{
+  "name": "projeto-drivencracy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node .src/app.js",
+    "dev": "nodemon ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheusbruno23/projeto-drivencracy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matheusbruno23/projeto-drivencracy/issues"
+  },
+  "homepage": "https://github.com/matheusbruno23/projeto-drivencracy#readme",
+  "dependencies": {
+    "@joi/date": "^2.1.0",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.7",
+    "dotenv": "^16.0.3",
+    "env": "^0.0.2",
+    "express": "^4.18.2",
+    "joi": "^17.9.2",
+    "mongodb": "^5.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
