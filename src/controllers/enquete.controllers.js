@@ -14,12 +14,12 @@ export async function criarEnquete(req , res){
 
     if(validation.error){
         console.log(validation.error)
-        res.status(422).send("")
+        res.sendStatus(422)
     }
 
     try {
-        await db.collection("enquetes").insertOne({title , expireAt: date})
-        res.sendStatus(201)
+        const enquete = await db.collection("enquetes").insertOne({title , expireAt: date})
+        res.status(201).send(enquete)
 
     } catch (error) {
         res.status(500).send(error.message)
@@ -30,7 +30,6 @@ export async function criarEnquete(req , res){
 export async function pegarEnquete(req , res){
 
     try {
-        
         const enquetes = await db.collection("enquetes").find().toArray()
         res.send(enquetes)
 

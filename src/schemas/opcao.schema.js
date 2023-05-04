@@ -2,5 +2,6 @@ import Joi from "joi";
 // _id / title / enqueteId
 
 export const opcaoSchema = Joi.object({
-    title: Joi.string().required()
+    title: Joi.string().required(),
+    pollId: Joi.string().required()
 })
