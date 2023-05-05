@@ -58,8 +58,28 @@ export async function opcoesEnquete(req , res){
 }
 
 export async function resultadoEnquete(req , res){
+    
+    const {id} = req.params
+
     try {
-        
+        const enquete = await db.collection("enquetes").findOne({_id: new ObjectId(id)})
+        if(!enquete) return res.sendStatus(404)
+
+        const todasOpcoes = await db.collection("opcoes").find({pollId:id}).toArray()
+        const opcoes = todasOpcoes.map((opcao) => String(opcao._id))
+
+        const ganhador = await db.collection("votos").aggregate([
+          {$match: {choiceId: {$in:opcoes}}},
+          {$group: {_id: "$choiceId" , voteAmount:{$sum: 1}}},
+          {$sort: {voteAmount: -1}}
+        ]).toArray()
+
+        const opcao = await db.collection("opcoes").findOne({_id: new ObjectId(ganhador[0]._id)})
+        const votes = ganhador[0].voteAmount
+        const resultado = {title: opcao.title , votes}
+        const resultadoFinal = {...enquete , resultado}
+
+    res.send(resultadoFinal)
     } catch (error) {
         res.status(500).send(error.message)
     }
