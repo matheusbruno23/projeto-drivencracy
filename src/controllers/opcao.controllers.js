@@ -40,20 +40,29 @@ export async function criarOpcao(req , res){
 }
 
 export async function votarOpcao(req , res){
-    // const {title} = req.body
-    // // const validation = enqueteSchema.validate(req.body , {abortEarly: false})
+    const {id} = req.params
+    const date = dayjs().format("DD/MM/YYYY HH:mm")
 
-    // // if(validation.error){
-    // //     console.log(validation.error)
-    // //     res.status(422).send("")
-    // // }
 
-    // try {
-    //     await db.collection("opcoes").insertOne({title , expireAt: date})
-    //     res.sendStatus(201)
 
-    // } catch (error) {
-    //     res.status(500).send(error.message)
-    // }
+    try {
+        const opcaoValida = await db.collection("opcoes").findOne({_id: new ObjectId(id)})
+        console.log(opcaoValida)
+        if(!opcaoValida) return res.sendStatus(404)
+
+        const enquete = await db.collection("enquetes").findOne({_id: new ObjectId(opcaoValida.pollId)})
+        console.log(enquete)
+
+        const expireDate = dayjs(enquete.expireAt, "DD/MM/YYYY HH:mm")
+        const now = dayjs()
+
+        if(now.isBefore(expireDate)) return res.sendStatus(403) 
+
+        await db.collection("votos").insertOne({createdAt:date , choiceId:id})
+
+        res.sendStatus(201)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
 
 }

@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 import {db} from "../database/database.config.js"
 import { enqueteSchema } from "../schemas/enquete.schema.js"
+import { ObjectId } from "mongodb"
 
 export async function criarEnquete(req , res){
     const {title , expireAt} = req.body
@@ -40,8 +41,16 @@ export async function pegarEnquete(req , res){
 }
 
 export async function opcoesEnquete(req , res){
+
+    const {id} = req.params
+
     try {
-        
+        const opcoes = await db.collection("opcoes").find({pollId: id}).toArray()
+        console.log(opcoes)
+        if(!opcoes) return res.sendStatus(404)
+
+        res.send(opcoes)
+
     } catch (error) {
         res.status(500).send(error.message)
     }
